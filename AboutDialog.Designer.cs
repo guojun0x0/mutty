@@ -44,8 +44,8 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(289, 91);
             this.label1.TabIndex = 1;
-            this.label1.Text = "MuTTY - Multi window support for PuTTY\r\n\r\nCopyright (c) 2017 Pascal Rosenkranz No" +
-    " support included.\r\n\r\nVersion 1.0.0-alpha\r\n\r\nUsing DockPanel Suite";
+            this.label1.Text = "MuTTY - Multi window support for PuTTY\r\n\r\nCopyright (c) 2017-2018 prosenkranz; No" +
+    " support included.\r\n\r\nVersion 1.1\r\n\r\nUsing DockPanel Suite";
             // 
             // button1
             // 
