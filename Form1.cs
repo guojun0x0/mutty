@@ -89,6 +89,10 @@ namespace MuTTY
                 case SessionType.SSH:
                     args += "-ssh ";
                     break;
+                default:
+                    MessageBox.Show("Unsupported session type: " + session.Type, "Unsupported session type",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
             }
 
             if (session.Username.Length > 0)
