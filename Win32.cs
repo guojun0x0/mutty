@@ -86,6 +86,10 @@ namespace MuTTY
         public static extern bool CloseWindow(IntPtr hWnd);
 
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool IsWindowVisible(IntPtr hWnd);
+
+
         [DllImport("Kernel32.dll", SetLastError = true)]
         public static extern bool CloseHandle(IntPtr hObject);
     }

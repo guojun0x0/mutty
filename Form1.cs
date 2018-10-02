@@ -100,16 +100,24 @@ namespace MuTTY
 
             Process process = Process.Start(processStartInfo);
             ttyDisposalJob.AddProcess(process.Handle);
-            process.WaitForInputIdle(1000);
+            
+            while (!Win32.IsWindowVisible(process.MainWindowHandle))
+            {
+                Thread.Sleep(50);
+            }
+
+            // Wait another 100ms just to be sure putty has loaded
+            Thread.Sleep(100);
 
             var tty = new TTYForm(process, session);
             tty.Dock = DockStyle.Fill;
             tty.DockAreas = DockAreas.Document;
+            tty.Show(dockPanel, DockState.Document);
+
             tty.StartPosition = FormStartPosition.CenterParent;
             tty.FormBorderStyle = FormBorderStyle.None;
             tty.BackColor = Color.Aqua;
             tty.OnClose.Add(OnTTYFormClose);
-            tty.Show(dockPanel, DockState.Document);
             numOpenTTYs++;
 
             lblAppStatus.Text = "Opened new " + session.Type.ToString() + " session to " + session.Host;
