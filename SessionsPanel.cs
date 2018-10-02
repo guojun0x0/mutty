@@ -207,5 +207,19 @@ namespace MuTTY
         {
             ShowNewSessionDialog();
         }
+
+        private void tvSessions_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (tvSessions.SelectedNode == null)
+                return;
+
+            // Handle "Enter" Key to open a selected session
+            TreeNode selectedNode = tvSessions.SelectedNode;
+            if (selectedNode.Tag is SessionInfo)
+            {
+                SessionInfo sessionInfo = (SessionInfo)selectedNode.Tag;
+                mainForm.openTTY(sessionInfo);
+            }
+        }
     }
 }

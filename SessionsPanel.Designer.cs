@@ -52,6 +52,7 @@
             this.tvSessions.TabIndex = 12;
             this.tvSessions.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvSessions_NodeMouseClick);
             this.tvSessions.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvSessions_NodeMouseDoubleClick);
+            this.tvSessions.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tvSessions_KeyPress);
             // 
             // toolStrip1
             // 
