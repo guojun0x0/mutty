@@ -21,12 +21,19 @@ namespace MuTTY
         protected Job ttyDisposalJob;
         uint numOpenTTYs;
         public string puttyPath { get; set; }
+        private string configFile;
 
         public Form1()
         {
             InitializeComponent();
 
             puttyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\putty.exe";
+
+            // Determine config file path
+            configFile = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\.mutty";
+#if DEBUG
+            configFile += "-dev";
+#endif
 
             // Set window size
             Rectangle screenSz = Screen.FromControl(this).Bounds;
@@ -36,6 +43,7 @@ namespace MuTTY
             // Add sessions form
             SessionsPanel sessionsPanel = new SessionsPanel(this);
             sessionsPanel.Dock = DockStyle.Fill;
+            sessionsPanel.ConfigFile = configFile;
             splitContainer1.Panel1.Controls.Add(sessionsPanel);
 
             // Add dock panel
@@ -147,6 +155,10 @@ namespace MuTTY
             SessionOptionsDialog dlg = new SessionOptionsDialog();
             dlg.OKButtonText = "Connect";
             dlg.Text = "Direct connect";
+            dlg.AllowGroupSelect = false;
+            dlg.SessionGroups = new List<SessionGroup>() { new SessionGroup("(No Group)") };
+            dlg.SelectedGroup = dlg.SessionGroups.First();
+
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 openTTY(dlg.Session);
@@ -166,7 +178,7 @@ namespace MuTTY
         {
             AboutDialog dlg = new AboutDialog();
             dlg.puttyPath = puttyPath;
-            dlg.configPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\.mutty";
+            dlg.configPath = configFile;
             dlg.ShowDialog();
         }
     }

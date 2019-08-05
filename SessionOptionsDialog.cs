@@ -14,6 +14,9 @@ namespace MuTTY
     {
         public SessionInfo Session;
         public String OKButtonText = "Ok";
+        public List<SessionGroup> SessionGroups;
+        public SessionGroup SelectedGroup;
+        public bool AllowGroupSelect = true;
 
         public SessionOptionsDialog()
         {
@@ -30,6 +33,13 @@ namespace MuTTY
         {
             if (Session == null)
                 Session = new SessionInfo();
+
+            groupComboBox.Items.Clear();
+            foreach (SessionGroup group in SessionGroups)
+                groupComboBox.Items.Add(group);
+
+            groupComboBox.SelectedItem = SelectedGroup;
+            groupComboBox.Enabled = AllowGroupSelect;
 
             cbSessionType.SelectedItem = Session.Type;
             txtHost.Text = Session.Host;
@@ -49,6 +59,8 @@ namespace MuTTY
             Session.Type = (SessionType)cbSessionType.SelectedItem;
             Session.Host = txtHost.Text;
             Session.Username = txtUsername.Text;
+
+            SelectedGroup = (SessionGroup)groupComboBox.SelectedItem;
 
             DialogResult = DialogResult.OK;
             Close();
