@@ -1,54 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace MuTTY
 {
     public class Configuration
     {
-        public static void Save(string xmlFilePath, List<SessionInfo> sessions)
+        public static void Save(string xmlFilePath, List<SessionGroup> sessionGroups)
         {
             XmlDocument doc = new XmlDocument();
-            XmlElement sessionsElement = doc.CreateElement("sessions");
-            foreach (SessionInfo session in sessions)
+            XmlElement groupsElement = doc.CreateElement("groups");
+            foreach (SessionGroup group in sessionGroups)
             {
-                XmlElement sessionElement = doc.CreateElement("session");
-                sessionElement.SetAttribute("type", ((int)session.Type).ToString());
-                sessionElement.SetAttribute("host", session.Host);
-                sessionElement.SetAttribute("username", session.Username);
-                sessionsElement.AppendChild(sessionElement);
+                XmlElement groupElement = doc.CreateElement("group");
+                groupElement.SetAttribute("name", group.Name);
+
+                foreach (SessionInfo session in group.Sessions)
+                {
+                    XmlElement sessionElement = doc.CreateElement("session");
+                    sessionElement.SetAttribute("type", ((int)session.Type).ToString());
+                    sessionElement.SetAttribute("host", session.Host);
+                    sessionElement.SetAttribute("username", session.Username);
+                    groupElement.AppendChild(sessionElement);
+                }
+
+                groupsElement.AppendChild(groupElement);
             }
 
-            doc.AppendChild(sessionsElement);
+            doc.AppendChild(groupsElement);
             doc.Save(xmlFilePath);
         }
 
-        public static List<SessionInfo> Load(string xmlFilePath)
+        public static List<SessionGroup> Load(string xmlFilePath)
         {
-            List<SessionInfo> sessions = new List<SessionInfo>();
+            List<SessionGroup> sessionGroups = new List<SessionGroup>();
             if (!File.Exists(xmlFilePath))
-                return sessions;
+                return sessionGroups;
 
             XmlDocument doc = new XmlDocument();
             doc.Load(xmlFilePath);
 
-            XmlNodeList sessionNodes = doc.SelectNodes("//sessions/descendant::session");
-            foreach (XmlNode node in sessionNodes)
+            XmlNodeList groupNodes = doc.SelectNodes("//groups/descendant::group");
+            foreach (XmlNode groupNode in groupNodes)
             {
-                SessionInfo session = new SessionInfo();
-                session.Type = (SessionType)int.Parse(node.Attributes["type"].Value);
-                session.Host = node.Attributes["host"].Value;
-                session.Username = node.Attributes["username"].Value;
+                SessionGroup group = new SessionGroup(groupNode.Attributes["name"].Value);
+                foreach (XmlNode sessionNode in groupNode.SelectNodes("session"))
+                {
+                    SessionInfo session = new SessionInfo();
+                    session.Type = (SessionType)int.Parse(sessionNode.Attributes["type"].Value);
+                    session.Host = sessionNode.Attributes["host"].Value;
+                    session.Username = sessionNode.Attributes["username"].Value;
 
-                sessions.Add(session);
+                    group.Sessions.Add(session);
+                }
+
+                sessionGroups.Add(group);
             }
 
-            return sessions;
+            return sessionGroups;
         }
     }
 }

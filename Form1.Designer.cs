@@ -148,7 +148,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.Name = "Form1";
-            this.Text = "MuTTY v1.1";
+            this.Text = "MuTTY v1.2";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.menuStrip1.ResumeLayout(false);
